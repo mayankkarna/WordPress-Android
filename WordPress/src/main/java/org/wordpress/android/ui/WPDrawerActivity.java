@@ -299,22 +299,6 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
         }
     }
 
-    private void openDrawer() {
-        if (mDrawerLayout != null) {
-            mDrawerLayout.openDrawer(GravityCompat.START);
-        }
-    }
-
-    private void toggleDrawer() {
-        if (mDrawerLayout != null) {
-            if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-                closeDrawer();
-            } else {
-                openDrawer();
-            }
-        }
-    }
-
     /**
      * called when user selects an item from the drawer
      */
@@ -671,8 +655,8 @@ public abstract class WPDrawerActivity extends ActionBarActivity {
     };
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home && mDrawerLayout != null) {
-            toggleDrawer();
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
