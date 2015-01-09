@@ -318,14 +318,15 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
+        if (super.onOptionsItemSelected(item)) {
+            return true;
+        }
 
         if (itemId == android.R.id.home) {
             FragmentManager fm = getFragmentManager();
-            if (fm.getBackStackEntryCount() > 0) {
-                fm.popBackStack();
-                setupBaseLayout();
-                return true;
-            }
+            fm.popBackStack();
+            setupBaseLayout();
+            return true;
         } else if (itemId == R.id.menu_new_media) {
             View view = findViewById(R.id.menu_new_media);
             if (view != null) {
@@ -381,8 +382,7 @@ public class MediaBrowserActivity extends WPDrawerActivity implements MediaGridL
                 mSearchView.clearFocus();
             }
         }
-
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 
     @Override

@@ -103,16 +103,16 @@ public class CommentsActivity extends WPDrawerActivity
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
+        if (super.onOptionsItemSelected(item)) {
+            return true;
+        }
         switch (item.getItemId()) {
             case android.R.id.home:
-                    FragmentManager fm = getFragmentManager();
-                    if (fm.getBackStackEntryCount() > 0) {
-                        fm.popBackStack();
-                    return true;
-                }
-                break;
+                FragmentManager fm = getFragmentManager();
+                fm.popBackStack();
+                return true;
         }
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 
     private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener =

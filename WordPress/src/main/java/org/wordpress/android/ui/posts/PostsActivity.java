@@ -222,15 +222,15 @@ public class PostsActivity extends WPDrawerActivity
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            FragmentManager fm = getFragmentManager();
-            if (fm.getBackStackEntryCount() > 0) {
+        if (super.onOptionsItemSelected(item)) {
+            return true;
+        }
+        switch (item.getItemId()) {
+            case android.R.id.home:
                 popPostDetail();
                 return true;
-            }
         }
-
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 
     @Override

@@ -138,19 +138,15 @@ public class NotificationsActivity extends WPDrawerActivity implements CommentAc
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
+        if (super.onOptionsItemSelected(item)) {
+            return true;
+        }
         switch (item.getItemId()) {
             case android.R.id.home:
-                FragmentManager fm = getFragmentManager();
-                if (fm.getBackStackEntryCount() > 0) {
-                    mRestoredReplyText = getCommentReplyText();
-                    popNoteDetail();
-                    return true;
-                } else {
-                    return super.onOptionsItemSelected(item);
-                }
-            default:
-                return super.onOptionsItemSelected(item);
+                popNoteDetail();
+                return true;
         }
+        return false;
     }
 
     private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener =

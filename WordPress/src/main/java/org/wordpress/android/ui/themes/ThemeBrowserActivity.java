@@ -251,14 +251,15 @@ public class ThemeBrowserActivity extends WPDrawerActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
+        if (super.onOptionsItemSelected(item)) {
+            return true;
+        }
 
         if (itemId == android.R.id.home) {
             FragmentManager fm = getFragmentManager();
-            if (fm.getBackStackEntryCount() > 0) {
-                fm.popBackStack();
-                setupBaseLayout();
-                return true;
-            }
+            fm.popBackStack();
+            setupBaseLayout();
+            return true;
         } else if (itemId == R.id.menu_search) {
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             if (mSearchFragment == null) {
@@ -270,8 +271,7 @@ public class ThemeBrowserActivity extends WPDrawerActivity implements
             ft.commit();
             return true;
         }
-
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 
     @Override
