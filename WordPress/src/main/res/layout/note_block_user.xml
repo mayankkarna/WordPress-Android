@@ -1,31 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/user_block_root_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/notifications_header_selector"
+    android:background="?android:selectableItemBackground"
     android:clickable="true"
+    android:contentDescription="@null"
+    android:focusable="true"
     android:orientation="vertical"
-    android:paddingLeft="@dimen/margin_extra_large"
-    android:paddingRight="@dimen/margin_extra_large">
+    android:paddingStart="@dimen/margin_extra_large"
+    android:paddingEnd="@dimen/margin_extra_large">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingBottom="@dimen/margin_medium"
-        android:paddingTop="@dimen/margin_medium">
+        android:paddingTop="@dimen/margin_medium"
+        android:paddingBottom="@dimen/margin_medium">
 
-        <org.wordpress.android.widgets.WPNetworkImageView
+        <ImageView
             android:id="@+id/user_avatar"
-            android:layout_width="@dimen/avatar_sz_medium"
-            android:layout_height="@dimen/avatar_sz_medium"
+            android:layout_width="@dimen/notifications_avatar_sz"
+            android:layout_height="@dimen/notifications_avatar_sz"
             android:layout_gravity="center_vertical"
-            android:layout_marginRight="@dimen/notifications_adjusted_font_margin" />
+            android:layout_marginEnd="@dimen/notifications_adjusted_font_margin"
+            android:importantForAccessibility="no" />
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
@@ -33,33 +38,32 @@
                 android:id="@+id/user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:includeFontPadding="false"
-                android:textStyle="bold"
                 android:ellipsize="end"
+                android:includeFontPadding="false"
                 android:singleLine="true"
-                android:textSize="@dimen/text_sz_medium"
+                android:textAppearance="?attr/textAppearanceSubtitle2"
                 tools:text="Bob Ross" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/user_blog_url"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:includeFontPadding="false"
                 android:ellipsize="end"
+                android:includeFontPadding="false"
                 android:singleLine="true"
-                android:textColor="@color/blue_new_kid"
-                android:textSize="@dimen/text_sz_medium"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="?attr/colorPrimary"
                 tools:text="Paint with Me" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/user_blog_tagline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:includeFontPadding="false"
                 android:ellipsize="end"
+                android:includeFontPadding="false"
                 android:singleLine="true"
-                android:textColor="@color/calypso_blue"
-                android:textSize="@dimen/text_sz_medium"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="?attr/wpColorOnSurfaceMedium"
                 tools:text="www.bobross.com" />
 
         </LinearLayout>
@@ -67,8 +71,8 @@
     </LinearLayout>
 
     <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_size"
         android:background="@drawable/notifications_list_divider_full_width" />
 
 </LinearLayout>

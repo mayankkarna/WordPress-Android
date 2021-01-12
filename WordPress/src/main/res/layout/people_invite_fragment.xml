@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:liftOnScrollTargetViewId="@+id/nested_scroll_view">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:theme="@style/WordPress.ActionBar" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:focusable="true"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:id="@+id/nested_scroll_view"
+        android:scrollbarStyle="outsideInset"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/usernames_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_large"
+                android:labelFor="@+id/invite_usernames"
+                android:text="@string/invite_names_title"
+                android:textAppearance="?attr/textAppearanceSubtitle1" />
+
+            <LinearLayout
+                android:id="@+id/usernames_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="@dimen/margin_extra_large"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical">
+
+                <org.wordpress.android.widgets.FlowLayout
+                    android:id="@+id/usernames"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:animateLayoutChanges="true"
+                    android:background="@drawable/invites_border"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+                    android:paddingBottom="@dimen/margin_large">
+
+                    <org.wordpress.android.widgets.MultiUsernameEditText
+                        android:id="@+id/invite_usernames"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:gravity="start"
+                        android:imeOptions="actionDone"
+                        android:inputType="text"
+                        android:minWidth="40dp"
+                        android:paddingStart="@dimen/margin_medium"
+                        android:paddingTop="@dimen/margin_large"
+                        android:paddingEnd="@dimen/margin_medium"
+                        android:paddingBottom="0dp"
+                        android:singleLine="true"
+                        android:textAlignment="viewStart"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        tools:text="username 1" />
+                </org.wordpress.android.widgets.FlowLayout>
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/invite_message_usernames_limit"
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    android:textStyle="italic" />
+
+                <LinearLayout
+                    android:id="@+id/username_errors_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:animateLayoutChanges="true"
+                    android:orientation="vertical" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/role_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginBottom="@dimen/margin_extra_large"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <org.wordpress.android.widgets.WPTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:labelFor="@+id/role"
+                        android:text="@string/role"
+                        android:textAppearance="?attr/textAppearanceSubtitle1"
+                        tools:text="@string/role" />
+
+                    <ImageView
+                        android:id="@+id/imgRoleInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/people_invite_role_info_desc"
+                        android:paddingStart="@dimen/margin_small"
+                        android:paddingEnd="@dimen/margin_small"
+                        android:src="@drawable/ic_info_outline_white_24dp"
+                        app:tint="?attr/wpColorOnSurfaceMedium" />
+                </LinearLayout>
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/role"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginTop="5dp"
+                    android:drawableEnd="@drawable/ic_dropdown_primary_30_24dp"
+                    android:drawableTint="?attr/colorPrimary"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    tools:text="@string/role" />
+
+            </LinearLayout>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/message_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:labelFor="@+id/message"
+                android:text="@string/invite_message_title"
+                android:textAppearance="?attr/textAppearanceSubtitle1" />
+
+            <RelativeLayout
+                android:id="@+id/message_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/invites_border"
+                android:padding="2dp">
+
+                <EditText
+                    android:id="@+id/message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="0dp"
+                    android:background="@color/transparent"
+                    android:gravity="top"
+                    android:inputType="textCapSentences|textAutoCorrect|textMultiLine"
+                    android:maxLength="@integer/invite_message_char_limit"
+                    android:minLines="4" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/message_remaining"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/message"
+                    android:gravity="end"
+                    android:padding="5dp"
+                    android:textAppearance="?attr/textAppearanceCaption" />
+            </RelativeLayout>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/message_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@string/invite_message_info"
+                android:textAppearance="?attr/textAppearanceCaption"
+                android:textStyle="italic" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

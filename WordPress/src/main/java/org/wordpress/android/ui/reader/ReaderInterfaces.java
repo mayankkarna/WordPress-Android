@@ -3,36 +3,46 @@ package org.wordpress.android.ui.reader;
 import android.view.View;
 
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType;
 
 public class ReaderInterfaces {
-
-    public static interface OnPostSelectedListener {
-        public void onPostSelected(long blogId, long postId);
+    private ReaderInterfaces() {
+        throw new AssertionError();
     }
 
-    public static interface OnTagSelectedListener {
-        public void onTagSelected(String tagName);
+    public interface OnPostSelectedListener {
+        void onPostSelected(ReaderPost post);
     }
 
     /*
-     * called when user taps the dropdown arrow next to a post to show the popup menu
+     * called from post detail fragment so toolbar can animate in/out when scrolling
      */
-    public static interface OnPostPopupListener {
-        public void onShowPostPopup(View view, ReaderPost post);
+    public interface AutoHideToolbarListener {
+        void onShowHideToolbar(boolean show);
     }
 
     /*
      * used by adapters to notify when data has been loaded
      */
     public interface DataLoadedListener {
-        public void onDataLoaded(boolean isEmpty);
+        void onDataLoaded(boolean isEmpty);
     }
 
     /*
-     * used by post list & post list adapter when user asks to reblog a post
+     * used by adapters to notify when follow button has been tapped
      */
-    public interface RequestReblogListener {
-        public void onRequestReblog(ReaderPost post, View sourceView);
+    public interface OnFollowListener {
+        void onFollowTapped(View view, String blogName, long blogId);
+
+        void onFollowingTapped();
     }
 
+    /*
+     * Used by adapters to notify when button on post list item is clicked. This interface was created during
+     * refactoring for the new Discover tab. It isn't ideal but we wanted to re-use some of the legacy code but
+     * refactoring everything was out of scope of the project.
+     */
+    public interface OnPostListItemButtonListener {
+        void onButtonClicked(ReaderPost post, ReaderPostCardActionType actionType);
+    }
 }

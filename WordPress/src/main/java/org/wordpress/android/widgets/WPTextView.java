@@ -7,31 +7,28 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.widget.TextView;
+
+import com.google.android.material.textview.MaterialTextView;
 
 import org.wordpress.android.R;
 
 /**
- * custom TextView used in layouts - enables keeping custom typeface handling in one place (so we
- * avoid having to set the typeface for every single TextView in every single activity)
+ * Custom TextView - with an option to auto fix widow words.
  */
-public class WPTextView extends TextView {
+public class WPTextView extends MaterialTextView {
     protected boolean mFixWidowWordEnabled;
 
     public WPTextView(Context context) {
         super(context, null);
-        TypefaceCache.setCustomTypeface(context, this, null);
     }
 
     public WPTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        TypefaceCache.setCustomTypeface(context, this, attrs);
         readCustomAttrs(context, attrs);
     }
 
     public WPTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        TypefaceCache.setCustomTypeface(context, this, attrs);
         readCustomAttrs(context, attrs);
     }
 
@@ -75,7 +72,7 @@ public class WPTextView extends TextView {
     private CharSequence replaceCharacter(CharSequence source, int charIndex, CharSequence replacement) {
         if (charIndex != -1 && charIndex < source.length() - 1) {
             return TextUtils.concat(source.subSequence(0, charIndex), replacement, source.subSequence(charIndex + 1,
-                    source.length()));
+                                                                                                      source.length()));
         }
         return source;
     }

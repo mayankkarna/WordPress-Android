@@ -2,25 +2,22 @@ package org.wordpress.android.ui.comments;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
 import android.text.Layout;
-import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.LeadingMarginSpan;
 import android.text.util.Linkify;
 import android.widget.TextView;
 
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.util.Emoticons;
+import org.wordpress.android.util.EmoticonsUtils;
 import org.wordpress.android.util.HtmlUtils;
-import org.wordpress.android.util.WPImageGetter;
+import org.wordpress.android.util.image.getters.WPCustomImageGetter;
 
 public class CommentUtils {
     /*
      * displays comment text as html, including retrieving images
      */
-    public static void displayHtmlComment(TextView textView, String content, int maxImageSize) {
+    public static void displayHtmlComment(TextView textView, String content, int maxImageSize, String errorParseMsg) {
         if (textView == null) {
             return;
         }
@@ -42,66 +39,67 @@ public class CommentUtils {
         }
 
         // convert emoticons first (otherwise they'll be downloaded)
-        content = Emoticons.replaceEmoticonsWithEmoji(content);
+        content = EmoticonsUtils.replaceEmoticonsWithEmoji(content);
 
         // now convert to HTML with an image getter that enforces a max image size
         final Spanned html;
         if (maxImageSize > 0 && content.contains("<img")) {
-            Drawable loading = textView.getContext().getResources().getDrawable(
-                    R.drawable.dashicon_format_image_big_grey);
-            Drawable failed = textView.getContext().getResources().getDrawable(R.drawable.noticon_warning_big_grey);
-            html = HtmlUtils.fromHtml(content, new WPImageGetter(textView, maxImageSize, WordPress.imageLoader, loading,
-                    failed));
+            html = HtmlUtils.fromHtml(content, new WPCustomImageGetter(textView, maxImageSize));
         } else {
             html = HtmlUtils.fromHtml(content);
         }
 
         // remove extra \n\n added by Html.convert()
-        CharSequence source = html;
         int start = 0;
-        int end = source.length();
-        while (start < end && Character.isWhitespace(source.charAt(start))) {
+        int end = html.length();
+        while (start < end && Character.isWhitespace(html.charAt(start))) {
             start++;
         }
-        while (end > start && Character.isWhitespace(source.charAt(end - 1))) {
+        while (end > start && Character.isWhitespace(html.charAt(end - 1))) {
             end--;
         }
 
-        textView.setText(source.subSequence(start, end));
-    }
-
-    // Assumes all lines after first line will not be indented
-    public static void indentTextViewFirstLine(TextView textView, Spannable text, int textOffsetX) {
-        if (text != null && textOffsetX > 0) {
-            text.setSpan(new TextWrappingLeadingMarginSpan(1, textOffsetX), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            textView.setText(text);
+        if (html.length() == 0) {
+            textView.setText(errorParseMsg);
         } else {
-            textView.setText(text);
+            textView.setText(html.subSequence(start, end));
         }
     }
 
-    private static class TextWrappingLeadingMarginSpan implements LeadingMarginSpan.LeadingMarginSpan2 {
-        private int margin;
-        private int lines;
+    // Assumes all lines after first line will not be indented
+    public static void indentTextViewFirstLine(TextView textView, int textOffsetX) {
+        if (textView == null || textOffsetX < 0) {
+            return;
+        }
 
-        public TextWrappingLeadingMarginSpan(int lines, int margin) {
-            this.margin = margin;
-            this.lines = lines;
+        SpannableString text = new SpannableString(textView.getText());
+        text.setSpan(new TextWrappingLeadingMarginSpan(textOffsetX), 0, text.length(),
+                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        textView.setText(text);
+    }
+
+    private static class TextWrappingLeadingMarginSpan implements LeadingMarginSpan.LeadingMarginSpan2 {
+        private final int mMargin;
+        private final int mLines;
+
+        TextWrappingLeadingMarginSpan(int margin) {
+            this.mMargin = margin;
+            this.mLines = 1;
         }
 
         @Override
         public int getLeadingMargin(boolean first) {
-            return first ? margin : 0;
+            return first ? mMargin : 0;
         }
 
         @Override
-        public void drawLeadingMargin(Canvas c, Paint p, int x, int dir, int top, int baseline, int bottom, CharSequence text, int start, int end, boolean first, Layout layout) {
-
+        public void drawLeadingMargin(Canvas c, Paint p, int x, int dir, int top, int baseline, int bottom,
+                                      CharSequence text, int start, int end, boolean first, Layout layout) {
         }
 
         @Override
         public int getLeadingMarginLineCount() {
-            return lines;
+            return mLines;
         }
     }
 }

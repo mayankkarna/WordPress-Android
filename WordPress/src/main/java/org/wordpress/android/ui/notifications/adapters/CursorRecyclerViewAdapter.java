@@ -3,7 +3,8 @@ package org.wordpress.android.ui.notifications.adapters;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 // Credit: https://gist.github.com/skyfishjy/443b7448f59be978bc59
 
@@ -68,11 +69,11 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
     }
 
     /**
-     * Swap in a new Cursor, returning the old Cursor.  Unlike
+     * Swap in a new Cursor, returning the old Cursor. Unlike
      * {@link #changeCursor(Cursor)}, the returned old Cursor is <em>not</em>
      * closed.
      */
-    public Cursor swapCursor(Cursor newCursor) {
+    private Cursor swapCursor(Cursor newCursor) {
         if (newCursor == mCursor) {
             return null;
         }

@@ -1,78 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/main_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/nux_background"
-            android:fillViewport="true">
 
-    <LinearLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center">
+        app:liftOnScrollTargetViewId="@+id/nested_scroll_view">
 
-        <org.wordpress.android.widgets.WPLinearLayoutSizeBound
-            app:maxWidth="@dimen/nux_width"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_main"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center">
+            android:layout_height="wrap_content"
+            app:theme="@style/WordPress.ActionBar" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nested_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/contact_us_button"
+                style="@style/HelpActivitySingleText"
+                android:text="@string/contact_support" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/faq_button"
+                style="@style/HelpActivitySingleText"
+                android:text="@string/browse_our_faq_button" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/my_tickets_button"
+                style="@style/HelpActivitySingleText"
+                android:text="@string/my_tickets" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/application_log_button"
+                style="@style/HelpActivitySingleText"
+                android:text="@string/application_log_button" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/applicationVersion"
+                style="@style/HelpActivitySingleText"
+                android:textColor="?attr/wpColorOnSurfaceMedium" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_size"
+                android:background="?android:attr/listDivider" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:id="@+id/contactEmailContainer"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
+                android:background="?android:attr/selectableItemBackground"
                 android:orientation="vertical"
-                android:gravity="center">
+                android:padding="@dimen/margin_extra_large">
 
-                <org.wordpress.android.widgets.WPTextView
-                    style="@style/WordPress.NUXTitle"
-                    android:text="@string/help"
-                    android:id="@+id/help_title"
-                    app:fontVariation="light"/>
-
-                <org.wordpress.android.widgets.WPTextView
-                    style="@style/WordPress.NUXGreyButtonNoBg"
-                    android:text="@string/nux_help_description"
-                    android:id="@+id/nux_help_description"
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginBottom="16dp"
-                    app:fixWidowWords="true"/>
+                    android:text="@string/support_contact_email"
+                    android:textAppearance="?attr/textAppearanceSubtitle1" />
 
-                <org.wordpress.android.widgets.WPTextView
-                    style="@style/WordPress.NUXPrimaryButton"
-                    android:text="@string/help_center"
-                    android:id="@+id/help_button"
-                    android:layout_width="match_parent"
-                    android:gravity="center"/>
-
-                <org.wordpress.android.widgets.WPTextView
-                    style="@style/WordPress.NUXPrimaryButton"
-                    android:text="@string/forums"
-                    android:id="@+id/forum_button"
-                    android:layout_width="match_parent"
-                    android:gravity="center"/>
-
-                <org.wordpress.android.widgets.WPTextView
-                    style="@style/WordPress.NUXPrimaryButton"
-                    android:text="@string/reader_title_applog"
-                    android:id="@+id/applog_button"
-                    android:layout_width="match_parent"
-                    android:gravity="center"/>
-
-                <org.wordpress.android.widgets.WPTextView
-                    style="@style/WordPress.NUXGreyButtonNoBg"
-                    android:text="@string/app_name"
-                    android:id="@+id/nux_help_version"
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/contactEmailAddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"/>
+                    android:text="@string/support_contact_email_not_set"
+                    android:textAppearance="?attr/textAppearanceCaption" />
             </LinearLayout>
-        </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
-    </LinearLayout>
-</ScrollView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_size"
+                android:background="?android:attr/listDivider" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,17 +1,18 @@
 package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
-import android.os.Build;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.ImageViewCompat;
+
 import org.wordpress.android.R;
-import org.wordpress.android.ui.reader.ReaderAnim;
-import org.wordpress.android.util.FormatUtils;
 
 /*
  * used when showing comment + comment count, like + like count
@@ -19,13 +20,14 @@ import org.wordpress.android.util.FormatUtils;
 public class ReaderIconCountView extends LinearLayout {
     private ImageView mImageView;
     private TextView mTextCount;
-    private int mCurrentCount;
+    private int mIconType;
 
     // these must match the same values in attrs.xml
     private static final int ICON_LIKE = 0;
     private static final int ICON_COMMENT = 1;
+    private static final int ICON_REBLOG = 2;
 
-    public ReaderIconCountView(Context context){
+    public ReaderIconCountView(Context context) {
         super(context);
         initView(context, null);
     }
@@ -43,8 +45,8 @@ public class ReaderIconCountView extends LinearLayout {
     private void initView(Context context, AttributeSet attrs) {
         inflate(context, R.layout.reader_icon_count_view, this);
 
-        mImageView = (ImageView) findViewById(R.id.image_count);
-        mTextCount = (TextView) findViewById(R.id.text_count);
+        mImageView = findViewById(R.id.image_count);
+        mTextCount = findViewById(R.id.text_count);
 
         if (attrs != null) {
             TypedArray a = context.getTheme().obtainStyledAttributes(
@@ -52,23 +54,42 @@ public class ReaderIconCountView extends LinearLayout {
                     R.styleable.ReaderIconCountView,
                     0, 0);
             try {
-                int icon = a.getInteger(R.styleable.ReaderIconCountView_readerIcon, ICON_LIKE);
-                switch (icon) {
-                    case ICON_LIKE :
-                        mImageView.setImageDrawable(context.getResources().getDrawable(R.drawable.reader_button_like));
+                mIconType = a.getInteger(R.styleable.ReaderIconCountView_readerIcon, ICON_LIKE);
+                switch (mIconType) {
+                    case ICON_LIKE:
+                        ColorStateList likeColor = AppCompatResources
+                                .getColorStateList(context, R.color.on_surface_medium_secondary_selector);
+                        mImageView.setImageDrawable(ContextCompat.getDrawable(context,
+                                R.drawable.reader_button_like));
+                        ImageViewCompat.setImageTintList(mImageView, likeColor);
+                        mTextCount.setTextColor(likeColor);
                         break;
-                    case ICON_COMMENT :
-                        mImageView.setImageDrawable(context.getResources().getDrawable(R.drawable.reader_button_comment));
+                    case ICON_COMMENT:
+                        ColorStateList commentColor = AppCompatResources
+                                .getColorStateList(context, R.color.on_surface_primary_selector);
+                        ImageViewCompat.setImageTintList(mImageView, commentColor);
+                        mImageView.setImageDrawable(ContextCompat.getDrawable(context,
+                                R.drawable.ic_comment_white_24dp));
+                        mTextCount.setTextColor(commentColor);
+                        break;
+                    case ICON_REBLOG:
+                        ColorStateList reblogColor = AppCompatResources
+                                .getColorStateList(context, R.color.on_surface_primary_selector);
+                        ImageViewCompat.setImageTintList(mImageView, reblogColor);
+                        mImageView.setImageDrawable(ContextCompat.getDrawable(context,
+                                R.drawable.ic_reblog_white_24dp));
+                        mTextCount.setTextColor(reblogColor);
                         break;
                 }
-
             } finally {
                 a.recycle();
             }
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mImageView.setBackgroundResource(R.drawable.ripple_oval);
+        // move the comment icon down a bit so it aligns with the text baseline
+        if (mIconType == ICON_COMMENT) {
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mImageView.getLayoutParams();
+            params.topMargin = context.getResources().getDimensionPixelSize(R.dimen.margin_extra_extra_small);
         }
     }
 
@@ -78,25 +99,17 @@ public class ReaderIconCountView extends LinearLayout {
 
     public void setSelected(boolean selected) {
         mImageView.setSelected(selected);
+        mTextCount.setSelected(selected);
     }
 
-    public void setCount(int count, boolean animateChanges) {
-        if (count != 0) {
-            mTextCount.setText(FormatUtils.formatInt(count));
-        }
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        mImageView.setEnabled(enabled);
+        mTextCount.setEnabled(enabled);
+    }
 
-        if (animateChanges && count != mCurrentCount) {
-            if (count == 0 && mTextCount.getVisibility() == View.VISIBLE) {
-                ReaderAnim.scaleOut(mTextCount, View.GONE, ReaderAnim.Duration.LONG, null);
-            } else if (mCurrentCount == 0 && mTextCount.getVisibility() != View.VISIBLE) {
-                ReaderAnim.scaleIn(mTextCount, ReaderAnim.Duration.LONG);
-            } else {
-                mTextCount.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
-            }
-        } else {
-            mTextCount.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
-        }
-
-        mCurrentCount = count;
+    public void setCount(int count) {
+        mTextCount.setText(count != 0 ? String.valueOf(count) : "");
     }
 }

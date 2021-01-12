@@ -1,13 +1,14 @@
 package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.reader.views.ReaderPhotoView;
@@ -61,6 +62,7 @@ public class ReaderPhotoViewerFragment extends Fragment {
         return view;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -87,7 +89,8 @@ public class ReaderPhotoViewerFragment extends Fragment {
             // use max of width/height so image is cached the same regardless of orientation
             Point pt = DisplayUtils.getDisplayPixelSize(getActivity());
             int hiResWidth = Math.max(pt.x, pt.y);
-            mPhotoView.setImageUrl(mImageUrl, hiResWidth, mIsPrivate, mPhotoViewListener);
+            // don't use AT media proxy here
+            mPhotoView.setImageUrl(mImageUrl, hiResWidth, mIsPrivate, false, mPhotoViewListener);
         }
     }
 }

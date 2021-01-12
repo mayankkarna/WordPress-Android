@@ -1,0 +1,64 @@
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/editor_activity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_main"
+            android:layout_width="match_parent"
+            android:duplicateParentState="true"
+            android:background="@drawable/tab_layout_background"
+            android:layout_height="wrap_content"
+            app:theme="@style/WordPress.ActionBar" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <org.wordpress.android.widgets.WPViewPager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/photo_fragment_container"
+                android:importantForAccessibility="no"
+                tools:context=".ui.posts.EditPostActivity" />
+
+            <View
+                android:id="@+id/view_overlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/photo_fragment_container"
+                android:layout_marginBottom="@dimen/format_bar_height"
+                android:background="@color/black_translucent_40"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone" />
+
+            <FrameLayout
+                android:id="@+id/photo_fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:visibility="gone"
+                tools:context=".ui.photopicker.PhotoPickerFragment"
+                tools:visibility="visible" />
+
+        </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <include layout="@layout/mlp_editor_preview_toolbar"/>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

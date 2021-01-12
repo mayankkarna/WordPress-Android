@@ -1,0 +1,231 @@
+# Translation of Release Notes & Play Store Descriptions in English (US)
+# This file is distributed under the same license as the Release Notes & Play Store Descriptions package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2018-05-23 11:49:24+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: VsCode\n"
+"Project-Id-Version: Release Notes & Play Store Descriptions\n"
+
+#. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_164"
+msgid ""
+"16.4:\n"
+"What’s New:\n"
+"\n"
+"Block Editor: You now can insert a File block, which places a download button for files like documents. We also addressed issues with the Heading and Gallery blocks.\n"
+"\n"
+"Posts List: You can now copy a post with the “Duplicate” button in your Blog Posts list.\n"
+"\n"
+"My Site: We also fixed a crash that occurred while editing your site title.\n"
+"\n"
+msgstr ""
+
+msgctxt "release_note_163"
+msgid ""
+"16.3:\n"
+"We’re pleased to announce several new WordPress mobile app features:\n"
+"- full-screen slideshows of photos or videos for WP.com and Jetpack sites;\n"
+"- the option to pick a homepage design when creating a WP.com site;\n"
+"- improved functionality for setting the dimensions of Cover and Columns;\n"
+"- and a Follow/Unfollow button for a site’s comments section, allowing users to track a conversation and be notified by email of updates (not supported for self-hosted sites that aren’t connected to Jetpack).\n"
+msgstr ""
+
+msgctxt "release_note_short_164"
+msgid ""
+"16.4:\n"
+"Block Editor: You now can insert a File block, which places a download button for files like documents. We also addressed issues with the Heading and Gallery blocks.\n"
+"\n"
+"Posts List: You can now copy a post with the “Duplicate” button in your Blog Posts list.\n"
+msgstr ""
+
+msgctxt "release_note_short_163"
+msgid ""
+"16.3:\n"
+"We’re pleased to announce several new WordPress mobile app features:\n"
+"- full-screen slideshows of photos or videos for WP.com and Jetpack sites;\n"
+"- the option to pick a homepage design when creating a WP.com site;\n"
+"- and a Follow/Unfollow button for a site’s comments section (not supported for self-hosted sites that aren’t connected to Jetpack).\n"
+msgstr ""
+
+#. translators: A shorter version of the Release notes to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+#. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "sample_post_content"
+msgid "The best moment of any trip, for me, is when I first step foot off the plane. The whole of the trip is in front me, ripe with possibility."
+msgstr ""
+
+msgctxt "sample_post_title"
+msgid "Best moment of any trip"
+msgstr ""
+
+msgctxt "release_generic_bugfixes"
+msgid "* Bug fixes release\n"
+msgstr ""
+
+msgctxt "release_note_footer_v2"
+msgid "As always, we thank you for using WordPress for Android. We value your feedback on the app, so please take a moment to write a review."
+msgstr ""
+
+msgctxt "release_note_footer"
+msgid "If you enjoy using the WordPress Android app, please take a moment to write a review — your input is invaluable to us."
+msgstr ""
+
+#. translators: Short description of the app to be displayed in the Play Store. Limit to 80 characters including spaces and commas!
+msgctxt "play_store_promo"
+msgid "Easily build your website & blog. Create posts & track analytics from anywhere!"
+msgstr ""
+
+#. translators: Multi-paragraph text used to display in the Play Store.
+msgctxt "play_store_desc"
+msgid ""
+"WordPress for Android puts the power of web publishing in your pocket. It’s a website creator and so much more!\n"
+"\n"
+"CREATE\n"
+"- Give your big ideas a home on the web. WordPress for Android is a website builder and a blog maker. Use it to create your website.\n"
+"- Pick the right look and feel from a wide selection of WordPress themes, then customize with photos, colors, and fonts so it’s uniquely you.\n"
+"- Built-in Quick Start tips guide you through the setup basics to set your new website up for success. (We’re not just a website creator -- we’re your partner and cheering squad!)\n"
+"\n"
+"STATS\n"
+"- Check your website’s stats in real time to keep track of the activity on your site.\n"
+"- Track which posts and pages get the most traffic over time by exploring daily, weekly, monthly, and yearly insights.\n"
+"- Use the traffic map to see which countries your visitors come from.\n"
+"\n"
+"NOTIFICATIONS\n"
+"- Get notifications about comments, likes, and new followers so you can see people reacting to your website as it happens.\n"
+"- Reply to new comments as they show up to keep the conversation flowing and acknowledge your readers.\n"
+"\n"
+"PUBLISH\n"
+"- Create updates, stories, photo essays announcements -- anything! --  with the editor.\n"
+"- Bring your posts and pages to life with photos and video from your camera and albums, or find the perfect image with the in-app collection of free-to-use pro photography.\n"
+"- Save ideas as drafts and come back to them when your muse returns, or schedule new posts for the future so your site is always fresh and engaging.\n"
+"- Add tags and categories to help new readers discover your posts, and watch your audience grow.\n"
+"\n"
+"READER\n"
+"- WordPress is more than a blog maker — use it to connect with a community of writers in the WordPress Reader. Explore thousands of topics by tag, discover new authors and organizations, and follow the ones who pique your interest.\n"
+"- Hang on to the posts that fascinate you with the Save for later feature.\n"
+"\n"
+"SHARE\n"
+"- Set up automated sharing to tell your followers on social media when you publish a new post. Automatically cross-post to Facebook, Twitter, and more.\n"
+"- Add social sharing buttons to your posts so your visitors can share them with their network, and let your fans become your ambassadors.\n"
+"\n"
+"Why WordPress?\n"
+"\n"
+"There are a lot of blogging services, website builders, and social networks out there. Why create your website with WordPress?\n"
+"\n"
+"WordPress powers over a third of the web. It’s used by hobby blogs, businesses of all sizes, online stores, even the biggest news sites on the internet. Odds are that many of your favorite websites are running on WordPress.\n"
+"\n"
+"With WordPress, you own your own content.  Other social networks treat you as a commodity, and assume ownership of the content you post. But with WordPress anything you publish is yours, and you can take it with you wherever you’d like.\n"
+"\n"
+"WordPress is an open source website creator, meaning anyone can see how it's made, and even contribute.  Other services and social networks are proprietary, closed systems; you can never be sure exactly how they work or what they are doing -- and they can disappear!\n"
+"\n"
+"Whether you need a website builder to create your website, or a simple blog maker, WordPress can help. It gives you beautiful designs, powerful features, and the freedom to build anything you want.\n"
+"\n"
+"WordPress for Android supports self-hosted sites running WordPress 4.0 and later, and all sites at WordPress.com. Just like WordPress, WordPress for Android is open source. Learn more at  https://wp.me/P7jrAc-tJ.  Need help with the app? Send us a tweet at @WPAndroid, or visit our forums at https://android.forums.wordpress.org/forum/troubleshooting.\n"
+"\n"
+"California users privacy notice: https://wp.me/Pe4R-d/#california-consumer-privacy-act-ccpa.\n"
+msgstr ""
+
+#. translators: Title to be displayed in the Play Store. Limit to 50 characters including spaces and commas!
+msgctxt "play_store_app_title"
+msgid "WordPress – Website & Blog Builder"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of the first screenshot in the Play Store.
+#. No specified characters limit here, but try to keep as short as the source one.
+msgctxt "play_store_screenshot_1"
+msgid "The world’s most popular website builder"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of the second screenshot in the Play Store.
+#. No specified characters limit here, but try to keep as short as the source one.
+msgctxt "play_store_screenshot_2"
+msgid "Create a site or start a blog"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of the third screenshot in the Play Store.
+#. No specified characters limit here, but try to keep as short as the source one.
+msgctxt "play_store_screenshot_3"
+msgid "Discover new reads"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of the fourth screenshot in the Play Store.
+#. No specified characters limit here, but try to keep as short as the source one.
+msgctxt "play_store_screenshot_4"
+msgid "Build an audience"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of the fifth screenshot in the Play Store.
+#. No specified characters limit here, but try to keep as short as the source one.
+msgctxt "play_store_screenshot_5"
+msgid "Keep tabs on your site"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of the fifth screenshot in the Play Store.
+#. No specified characters limit here, but try to keep as short as the source one.
+msgctxt "play_store_screenshot_6"
+msgid "Reply in real time"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of the fifth screenshot in the Play Store.
+#. No specified characters limit here, but try to keep as short as the source one.
+msgctxt "play_store_screenshot_7"
+msgid "Upload on the go"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
+#. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
+msgctxt "enhanced_app_store_screenshot_1"
+msgid ""
+"<strong>Create</strong> beautiful\n"
+"posts and pages\n"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
+#. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
+msgctxt "enhanced_app_store_screenshot_2"
+msgid ""
+"<strong>Track</strong> what your\n"
+"visitors love\n"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
+#. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
+msgctxt "enhanced_app_store_screenshot_3"
+msgid ""
+"<strong>Check</strong> what's\n"
+"happening in real-time\n"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
+#. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
+msgctxt "enhanced_app_store_screenshot_4"
+msgid ""
+"<strong>Share</strong>\n"
+"from anywhere\n"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
+#. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
+msgctxt "enhanced_app_store_screenshot_5"
+msgid ""
+"<strong>Capture</strong> ideas\n"
+"on the go\n"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
+#. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
+msgctxt "enhanced_app_store_screenshot_6"
+msgid "<strong>Write</strong> without compromises"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
+#. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
+msgctxt "enhanced_app_store_screenshot_7"
+msgid ""
+"<strong>Build</strong> and manage\n"
+"your website\n"
+msgstr ""
+

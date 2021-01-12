@@ -12,23 +12,25 @@ import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import java.util.List;
 
 public class NoteBlockAdapter extends ArrayAdapter<NoteBlock> {
-
     private final LayoutInflater mLayoutInflater;
-    private final int mBackgroundColor;
 
     private List<NoteBlock> mNoteBlockList;
 
-    public NoteBlockAdapter(Context context, List<NoteBlock> noteBlocks, int backgroundColor) {
+    public NoteBlockAdapter(Context context, List<NoteBlock> noteBlocks) {
         super(context, 0, noteBlocks);
 
         mNoteBlockList = noteBlocks;
         mLayoutInflater = LayoutInflater.from(context);
-        mBackgroundColor = backgroundColor;
     }
 
     @Override
     public boolean hasStableIds() {
         return true;
+    }
+
+    @Override
+    public int getCount() {
+        return mNoteBlockList == null ? 0 : mNoteBlockList.size();
     }
 
     @Override
@@ -44,13 +46,13 @@ public class NoteBlockAdapter extends ArrayAdapter<NoteBlock> {
         // Update the block type for this view
         convertView.setTag(R.id.note_block_tag_id, noteBlock.getBlockType());
 
-        noteBlock.setBackgroundColor(mBackgroundColor);
-
         return noteBlock.configureView(convertView);
     }
 
     public void setNoteList(List<NoteBlock> noteList) {
-        if (noteList == null) return;
+        if (noteList == null) {
+            return;
+        }
 
         mNoteBlockList = noteList;
         notifyDataSetChanged();

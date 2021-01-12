@@ -1,41 +1,62 @@
 package org.wordpress.android.ui.posts;
 
 import android.content.Context;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.view.ViewCompat;
+
+import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.models.CategoryNode;
 
 import java.util.List;
 
 public class CategoryArrayAdapter extends ArrayAdapter<CategoryNode> {
-    int mResourceId;
+    private int mResourceId;
 
-    public CategoryArrayAdapter(Context context, int resource, List<CategoryNode> objects) {
+    CategoryArrayAdapter(Context context, int resource, List<CategoryNode> objects) {
         super(context, resource, objects);
         mResourceId = resource;
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(mResourceId, parent, false);
-        TextView textView = (TextView) rowView.findViewById(R.id.categoryRowText);
-        ImageView levelIndicatorView = (ImageView) rowView.findViewById(R.id.categoryRowLevelIndicator);
-        textView.setText(Html.fromHtml(getItem(position).getName()));
-        int level = getItem(position).getLevel();
-        if (level == 1) { // hide ImageView
-            levelIndicatorView.setVisibility(View.GONE);
-        } else {
-            ViewGroup.LayoutParams params = levelIndicatorView.getLayoutParams();
-            params.width = (params.width / 2) * level;
-            levelIndicatorView.setLayoutParams(params);
+        View rowView = convertView;
+        if (rowView == null) {
+            rowView = inflater.inflate(mResourceId, parent, false);
+            ViewHolder viewHolder = new ViewHolder(rowView);
+            rowView.setTag(viewHolder);
+        }
+
+        ViewHolder viewHolder = (ViewHolder) rowView.getTag();
+        CategoryNode node = getItem(position);
+        if (node != null) {
+            int verticalPadding = rowView.getResources().getDimensionPixelOffset(R.dimen.margin_large);
+            int horizontalPadding = rowView.getResources().getDimensionPixelOffset(R.dimen.margin_extra_large);
+
+            viewHolder.mCategoryRowText.setText(StringEscapeUtils.unescapeHtml4(node.getName()));
+            ViewCompat.setPaddingRelative(viewHolder.mCategoryRowText,
+                    horizontalPadding * node.getLevel(),
+                    verticalPadding,
+                    horizontalPadding,
+                    verticalPadding);
         }
         return rowView;
+    }
+
+    private static class ViewHolder {
+        private final TextView mCategoryRowText;
+
+        private ViewHolder(View view) {
+            this.mCategoryRowText = view.findViewById(R.id.categoryRowText);
+        }
     }
 }

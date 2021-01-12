@@ -1,29 +1,33 @@
 package org.wordpress.android.ui.reader;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
+import com.google.android.material.appbar.AppBarLayout;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderUserList;
+import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.widgets.RecyclerItemDecoration;
 
 /*
  * displays a list of users who like a specific reader post
  */
-public class ReaderUserListActivity extends ActionBarActivity {
-
+public class ReaderUserListActivity extends LocaleAwareActivity {
     private ReaderRecyclerView mRecyclerView;
     private ReaderUserAdapter mAdapter;
+    private AppBarLayout mAppBarLayout;
     private int mRestorePosition;
 
     @Override
@@ -33,16 +37,22 @@ public class ReaderUserListActivity extends ActionBarActivity {
         setContentView(R.layout.reader_activity_userlist);
         setTitle(null);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
+        }
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         if (savedInstanceState != null) {
             mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION);
@@ -51,7 +61,9 @@ public class ReaderUserListActivity extends ActionBarActivity {
         int spacingHorizontal = 0;
         int spacingVertical = DisplayUtils.dpToPx(this, 1);
         mRecyclerView = (ReaderRecyclerView) findViewById(R.id.recycler_view);
-        mRecyclerView.addItemDecoration(new ReaderRecyclerView.ReaderItemDecoration(spacingHorizontal, spacingVertical));
+        mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
+
+        mAppBarLayout = findViewById(R.id.appbar_main);
 
         long blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
         long postId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
@@ -76,6 +88,7 @@ public class ReaderUserListActivity extends ActionBarActivity {
                 public void onDataLoaded(boolean isEmpty) {
                     if (!isEmpty && mRestorePosition > 0) {
                         mRecyclerView.scrollToPosition(mRestorePosition);
+                        mAppBarLayout.post(mAppBarLayout::requestLayout);
                     }
                     mRestorePosition = 0;
                 }
@@ -135,5 +148,4 @@ public class ReaderUserListActivity extends ActionBarActivity {
         }
         return ReaderUtils.getLongLikeLabelText(this, numLikes, isLikedByCurrentUser);
     }
-
 }

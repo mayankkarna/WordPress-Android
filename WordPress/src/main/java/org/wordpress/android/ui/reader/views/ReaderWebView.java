@@ -2,51 +2,120 @@ package org.wordpress.android.ui.reader.views;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Build;
+import android.graphics.Color;
+import android.os.Handler;
+import android.os.Message;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
-import android.webkit.WebChromeClient;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.ui.WPWebView;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.WPUrlUtils;
+import org.wordpress.android.util.helpers.WebChromeClientWithVideoPoster;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import javax.inject.Inject;
 
 /*
  * WebView descendant used by ReaderPostDetailFragment - handles
  * displaying fullscreen video and detecting url/image clicks
  */
-public class ReaderWebView extends WebView {
-
+public class ReaderWebView extends WPWebView {
     public interface ReaderWebViewUrlClickListener {
-        public boolean onUrlClick(String url);
-        public boolean onImageUrlClick(String imageUrl, View view, int x, int y);
+        @SuppressWarnings("SameReturnValue")
+        boolean onUrlClick(String url);
+
+        boolean onPageJumpClick(String pageJump);
+
+        boolean onImageUrlClick(String imageUrl, View view, int x, int y);
+
+        boolean onFileDownloadClick(String fileUrl);
     }
 
     public interface ReaderCustomViewListener {
-        public void onCustomViewShown();
-        public void onCustomViewHidden();
-        public ViewGroup onRequestCustomView();
-        public ViewGroup onRequestContentView();
+        void onCustomViewShown();
+
+        void onCustomViewHidden();
+
+        ViewGroup onRequestCustomView();
+
+        ViewGroup onRequestContentView();
     }
 
     public interface ReaderWebViewPageFinishedListener {
-        public void onPageFinished(WebView view, String url);
+        void onPageFinished(WebView view, String url);
     }
+
+    /**
+     * Timeout in milliseconds for read / connect timeouts
+     */
+    private static final int TIMEOUT_MS = 30000;
 
     private ReaderWebChromeClient mReaderChromeClient;
     private ReaderCustomViewListener mCustomViewListener;
     private ReaderWebViewUrlClickListener mUrlClickListener;
     private ReaderWebViewPageFinishedListener mPageFinishedListener;
 
+    private static String mToken;
+    private static boolean mIsPrivatePost;
+    private static boolean mBlogSchemeIsHttps;
+
     private boolean mIsDestroyed;
+    @Inject AccountStore mAccountStore;
 
     public ReaderWebView(Context context) {
         super(context);
-        init();
+        init(context);
+    }
+
+    public ReaderWebView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init(context);
+    }
+
+    public ReaderWebView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        init(context);
+    }
+
+    @SuppressLint("NewApi")
+    private void init(Context context) {
+        ((WordPress) context.getApplicationContext()).component().inject(this);
+        setBackgroundColor(Color.TRANSPARENT);
+        if (!isInEditMode()) {
+            mToken = mAccountStore.getAccessToken();
+
+            mReaderChromeClient = new ReaderWebChromeClient(this);
+            this.setWebChromeClient(mReaderChromeClient);
+            this.setWebViewClient(new ReaderWebViewClient(this));
+            this.getSettings().setUserAgentString(WordPress.getUserAgent());
+            this.getSettings().setMediaPlaybackRequiresUserGesture(false);
+
+            // Enable third-party cookies since they are disabled by default;
+            // we need third-party cookies to support authenticated images
+            CookieManager.getInstance().setAcceptThirdPartyCookies(this, true);
+            this.setDownloadListener(
+                    (url, userAgent, contentDisposition, mimetype, contentLength) -> {
+                        if (hasUrlClickListener()) {
+                            mUrlClickListener.onFileDownloadClick(url);
+                        }
+                    });
+        }
     }
 
     @Override
@@ -59,29 +128,9 @@ public class ReaderWebView extends WebView {
         return mIsDestroyed;
     }
 
-    public ReaderWebView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
 
-    public ReaderWebView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        init();
-    }
-
-    @SuppressLint("NewApi")
-    private void init() {
-        if (!isInEditMode()) {
-            mReaderChromeClient = new ReaderWebChromeClient(this);
-            this.setWebChromeClient(mReaderChromeClient);
-            this.setWebViewClient(new ReaderWebViewClient(this));
-            this.getSettings().setUserAgentString(WordPress.getUserAgent());
-            // Lollipop disables third-party cookies by default, but we need them in order
-            // to support authenticated images
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                CookieManager.getInstance().setAcceptThirdPartyCookies(this, true);
-            }
-        }
+    public void clearContent() {
+        loadUrl("about:blank");
     }
 
     private ReaderWebViewUrlClickListener getUrlClickListener() {
@@ -120,9 +169,17 @@ public class ReaderWebView extends WebView {
         return mCustomViewListener;
     }
 
+    public void setIsPrivatePost(boolean isPrivatePost) {
+        mIsPrivatePost = isPrivatePost;
+    }
+
+    public void setBlogSchemeIsHttps(boolean blogSchemeIsHttps) {
+        mBlogSchemeIsHttps = blogSchemeIsHttps;
+    }
+
     private static boolean isValidClickedUrl(String url) {
         // only return true for http(s) urls so we avoid file: and data: clicks
-        return (url != null && url.startsWith("http"));
+        return (url != null && (url.startsWith("http") || url.startsWith("wordpress:")));
     }
 
     public boolean isCustomViewShowing() {
@@ -135,22 +192,59 @@ public class ReaderWebView extends WebView {
         }
     }
 
-    /*
-     * detect when an image is tapped
+    /***
+     * isValidInstagramImageClick checks if this is an embedded instragram situation.
+     * If so, we want to ignore image click so that the iframe src gets handled
+     * The additional URL grab is an additional check for the instagram.com host
+     * @param hr - the HitTestResult
+     * @return true if is instagram or false otherwise
      */
+    private boolean isValidInstagramImageClick(HitTestResult hr) {
+        // Referenced https://pacheco.dev/posts/android/webview-image-anchor/
+        if (hr.getType() == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
+            Handler handler = new Handler();
+            Message message = handler.obtainMessage();
+
+            this.requestFocusNodeHref(message);
+            String url = message.getData().getString("url");
+            if (url == null) {
+                return false;
+            }
+
+            return url.contains("ig_embed");
+        } else {
+            return false;
+        }
+    }
+
+    /*
+     * detect when a link is tapped
+     */
+    @SuppressLint("ClickableViewAccessibility") // works as is
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_UP && mUrlClickListener != null) {
             HitTestResult hr = getHitTestResult();
-            if (hr != null && (hr.getType() == HitTestResult.IMAGE_TYPE
-                            || hr.getType() == HitTestResult.SRC_IMAGE_ANCHOR_TYPE)) {
-                String imageUrl = hr.getExtra();
-                if (isValidClickedUrl(imageUrl) ) {
-                    return mUrlClickListener.onImageUrlClick(
-                            imageUrl,
-                            this,
-                            (int) event.getX(),
-                            (int) event.getY());
+            if (hr != null) {
+                if (isValidClickedUrl(hr.getExtra())) {
+                    if (UrlUtils.isImageUrl(hr.getExtra())) {
+                        if (isValidInstagramImageClick(hr)) {
+                            return super.onTouchEvent(event);
+                        } else {
+                            return mUrlClickListener.onImageUrlClick(
+                                    hr.getExtra(),
+                                    this,
+                                    (int) event.getX(),
+                                    (int) event.getY());
+                        }
+                    } else {
+                        return mUrlClickListener.onUrlClick(hr.getExtra());
+                    }
+                } else {
+                    String pageJump = UrlUtils.getPageJumpOrNull(hr.getExtra());
+                    if (null != pageJump) {
+                        return mUrlClickListener.onPageJumpClick(pageJump);
+                    }
                 }
             }
         }
@@ -167,6 +261,8 @@ public class ReaderWebView extends WebView {
             mReaderWebView = readerWebView;
         }
 
+
+
         @Override
         public void onPageFinished(WebView view, String url) {
             if (mReaderWebView.hasPageFinishedListener()) {
@@ -180,22 +276,52 @@ public class ReaderWebView extends WebView {
             // loaded (is visible) - have seen some posts containing iframes
             // automatically try to open urls (without being clicked)
             // before the page has loaded
-            if (view.getVisibility() == View.VISIBLE
-                    && mReaderWebView.hasUrlClickListener()
-                    && isValidClickedUrl(url)) {
-                return mReaderWebView.getUrlClickListener().onUrlClick(url);
-            } else {
-                return false;
+            return view.getVisibility() == View.VISIBLE
+                   && mReaderWebView.hasUrlClickListener()
+                   && isValidClickedUrl(url)
+                   && mReaderWebView.getUrlClickListener().onUrlClick(url);
+        }
+
+        @SuppressWarnings("deprecation")
+        @Override
+        public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+            URL imageUrl = null;
+            if (mIsPrivatePost && mBlogSchemeIsHttps && UrlUtils.isImageUrl(url)) {
+                try {
+                    imageUrl = new URL(UrlUtils.makeHttps(url));
+                } catch (MalformedURLException e) {
+                    AppLog.e(AppLog.T.READER, e);
+                }
             }
+            // Intercept requests for private images and add the WP.com authorization header
+            if (imageUrl != null && WPUrlUtils.safeToAddWordPressComAuthToken(imageUrl)
+                && !TextUtils.isEmpty(mToken)) {
+                try {
+                    HttpURLConnection conn = (HttpURLConnection) imageUrl.openConnection();
+                    conn.setRequestProperty("Authorization", "Bearer " + mToken);
+                    conn.setReadTimeout(TIMEOUT_MS);
+                    conn.setConnectTimeout(TIMEOUT_MS);
+                    conn.setRequestProperty("User-Agent", WordPress.getUserAgent());
+                    conn.setRequestProperty("Connection", "Keep-Alive");
+                    return new WebResourceResponse(conn.getContentType(),
+                            conn.getContentEncoding(),
+                            conn.getInputStream());
+                } catch (IOException e) {
+                    AppLog.e(AppLog.T.READER, e);
+                }
+            }
+
+            return super.shouldInterceptRequest(view, url);
         }
     }
 
-    private static class ReaderWebChromeClient extends WebChromeClient {
+    private static class ReaderWebChromeClient extends WebChromeClientWithVideoPoster {
         private final ReaderWebView mReaderWebView;
         private View mCustomView;
         private CustomViewCallback mCustomViewCallback;
 
         ReaderWebChromeClient(ReaderWebView readerWebView) {
+            super(readerWebView, R.drawable.media_movieclip);
             if (readerWebView == null) {
                 throw new IllegalArgumentException("ReaderWebChromeClient requires readerWebView");
             }
@@ -286,8 +412,6 @@ public class ReaderWebView extends WebView {
 
             mCustomView = null;
             mCustomViewCallback = null;
-
-            mReaderWebView.onPause();
         }
 
         boolean isCustomViewShowing() {
